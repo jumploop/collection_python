@@ -11,9 +11,6 @@ from zapp.ANGELCRUNCH.view._route import ROUTE_LIST
 for route in reversed(ROUTE_LIST):
     if isinstance(route.host, (basestring, str)):
         print(route.host.replace("\\.", "."))
-    else:
-        pass
-        # print CID2NAME[route.host.cid]
     for i in route.handlers:
         path, cls, params = i
         print("\t %s %s.%s" % (path.ljust(35), cls.__module__, cls.__name__))

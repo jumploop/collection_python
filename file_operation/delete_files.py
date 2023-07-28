@@ -8,7 +8,10 @@ import datetime
 def backup_file(file_path):
     """备份文件"""
     backup_dir = os.path.dirname(file_path)
-    backup_name = os.path.basename(file_path) + '_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    backup_name = (
+        f'{os.path.basename(file_path)}_'
+        + datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    )
     backup_path = os.path.join(backup_dir, backup_name)
     shutil.copy2(file_path, backup_path)
     print(f"备份文件 {file_path} 到 {backup_path}")
@@ -41,7 +44,7 @@ def main():
     if backup:
         rollback = input("是否回滚文件（y/n）：").lower() == 'y'
         if rollback:
-            backup_list = glob.glob(os.path.join(path, pattern + '_*'))
+            backup_list = glob.glob(os.path.join(path, f'{pattern}_*'))
             if not backup_list:
                 print("没有找到备份文件")
                 return

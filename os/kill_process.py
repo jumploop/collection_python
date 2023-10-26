@@ -13,5 +13,3 @@ def kill_process_name(process_name):
             os.kill(pid, signal.SIGKILL)
 
 
-if __name__ == '__main__':
-    pass

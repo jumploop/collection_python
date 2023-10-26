@@ -36,8 +36,7 @@ class LeanCloudApi(object):
         query.skip(skip_num * limit_num)
         query.limit(limit_num)
         try:
-            res = query.find()
-            return res
+            return query.find()
         except:
             traceback.print_exc()
             return []
@@ -46,7 +45,7 @@ class LeanCloudApi(object):
         query = self._query
         obj = query.get(obj_id)
         img_url = obj.get('File').url
-        img_info_url = img_url + '?imageInfo'
+        img_info_url = f'{img_url}?imageInfo'
         r = LeanCloudApi.fetch_data(img_info_url)
         if not r:
             return
@@ -69,8 +68,7 @@ class LeanCloudApi(object):
         query.descending('ID')
         query.limit(num)
         try:
-            obj_list = query.find()
-            return obj_list
+            return query.find()
         except:
             time.sleep(2)
             obj_list = query.find()
@@ -213,7 +211,7 @@ class LeanCloudApi(object):
     @staticmethod
     def is_img_file(filename):
         suffix = filename.split('.')[-1].lower()  # note: remember ingore case
-        img_types = set(['jpg', 'png', 'gif', 'jpeg', 'bmp'])
+        img_types = {'jpg', 'png', 'gif', 'jpeg', 'bmp'}
         return suffix in img_types
 
     @staticmethod

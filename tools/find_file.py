@@ -5,11 +5,7 @@ import os
 
 
 def find_files(substring, path):
-    results = []
-    for f in os.listdir(path):
-        if substring in f:
-            results.append(os.path.join(path, f))
-    return results
+    return [os.path.join(path, f) for f in os.listdir(path) if substring in f]
 
 
 if __name__ == '__main__':

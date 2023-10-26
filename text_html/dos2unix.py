@@ -34,7 +34,7 @@ def unix2dos(data):
 
 
 def confirm(file_):
-    s = input('%s? ' % file_)
+    s = input(f'{file_}? ')
     return s and s[0] == 'y'
 
 
@@ -74,23 +74,23 @@ def main():
     nobackup = 0
     interactive = 0
     for k, v in opts:
-        if k == '-f':
+        if k == '-b':
+            backup = v
+        elif k == '-c':
+            nobackup = 1
+        elif k == '-d':
+            copystat = shutil.copystat
+        elif k == '-f':
             force = 1
+        elif k == '-i':
+            interactive = 1
         elif k == '-n':
             noaction = 1
             verbose = 1
-        elif k == '-i':
-            interactive = 1
         elif k == '-u':
             convert = unix2dos
         elif k == '-v':
             verbose = 1
-        elif k == '-b':
-            backup = v
-        elif k == '-d':
-            copystat = shutil.copystat
-        elif k == '-c':
-            nobackup = 1
     asciiregex = re.compile('[ -~\r\n\t\f]+')
     for file_ in args:
         if not os.path.isfile(file_) or file_[-len(backup):] == backup:
@@ -105,10 +105,9 @@ def main():
                     print (file_)
                 if not interactive or confirm(file_):
                     if not noaction:
-                        newfile = file_+'.@'
-                        f = open(newfile, 'w')
-                        f.write(newdata)
-                        f.close()
+                        newfile = f'{file_}.@'
+                        with open(newfile, 'w') as f:
+                            f.write(newdata)
                         copystat(file_, newfile)
                         if backup:
                             backfile = file_+backup

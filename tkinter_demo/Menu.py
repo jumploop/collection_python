@@ -21,7 +21,7 @@ counter = 0
 
 def do_job():
     global counter
-    l.config(text='do ' + str(counter))
+    l.config(text=f'do {str(counter)}')
     counter += 1
 
 

@@ -38,9 +38,9 @@ def main():
     ftime = 0.0
     for file in sorted(filelist):
         clip = VideoFileClip(file)
-        print("{}: {}秒".format(file, clip.duration))
+        print(f"{file}: {clip.duration}秒")
         ftime += clip.duration
-    print("%d seconds: " % ftime, str(datetime.timedelta(seconds=ftime)))
+    print("%d seconds: " % ftime, datetime.timedelta(seconds=ftime))
 
 
 if __name__ == "__main__":

@@ -12,19 +12,17 @@ from sync_spider import SyncSpider
 class TestSyncSpider(SyncSpider):
     def handle_html(self, url, html):
         print(html)
-        pass
 
 
 class TestAsyncSpider(AsyncSpider):
     def handle_html(self, url, html):
         print(html)
-        pass
 
 
-urls = []
-for page in range(1, 1000):
-    #urls.append('http://www.jb51.net/article/%s.htm' % page)
-    urls.append('http://www.imooc.com/data/check_f.php?page=%d'%page)
+urls = [
+    'http://www.imooc.com/data/check_f.php?page=%d' % page
+    for page in range(1, 1000)
+]
 
 
 def test_async():

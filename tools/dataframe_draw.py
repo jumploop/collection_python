@@ -37,7 +37,5 @@ def draw():
     io = StringIO()
     fig.savefig(io, format='png')
     img_data = base64.encodebytes(bytes(io.getvalue()))
-    return u'<img src="data:image/png;base64,{}" />'.format(img_data)
+    return f'<img src="data:image/png;base64,{img_data}" />'
 
-if __name__ == '__main__':
-    pass

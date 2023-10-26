@@ -12,7 +12,7 @@ def solve_china_city():
         for l in f:
             l = l.strip()
             # unicode.endswith
-            if l.endswith(tuple(['市', '区', '县'])):
+            if l.endswith(('市', '区', '县')):
                 print(l[:-1])
             else:
                 print(l)

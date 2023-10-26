@@ -25,10 +25,8 @@ def read_input(filepath):
         for idx, start_end_time in enumerate(lines[1:]):
             pair = start_end_time.split()
             start, end = pair[0], pair[1]
-            part_name = 'part_' + str(idx) + '.' + suffix
-            cmd = "ffmpeg -i {} -ss {} -to {} -c copy {}".format(
-                input_mp4, start, end, part_name
-            )
+            part_name = f'part_{str(idx)}.{suffix}'
+            cmd = f"ffmpeg -i {input_mp4} -ss {start} -to {end} -c copy {part_name}"
             print(cmd)
             os.system(cmd)
             yield part_name
@@ -44,12 +42,12 @@ def write_part_to_file(part_list):
 
     with open(CONCAT_FILE, 'w') as f:
         for path in filepath_list:
-            f.write("file '{}'\n".format(path))
+            f.write(f"file '{path}'\n")
     return filepath_list
 
 
 def concat_video():
-    cmd = "ffmpeg -f concat -safe 0 -i {} -c copy output.mp4".format(CONCAT_FILE)
+    cmd = f"ffmpeg -f concat -safe 0 -i {CONCAT_FILE} -c copy output.mp4"
     os.system(cmd)
 
 

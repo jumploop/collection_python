@@ -48,9 +48,7 @@ def main():
     time_space = 5
     yagmail.register(username, password)
     while True:
-        # 读取未读邮件
-        msg = read_mail(username, password)
-        if msg:
+        if msg := read_mail(username, password):
             if msg == 'shutdown':
                 shutdown()
             elif msg == 'grab':

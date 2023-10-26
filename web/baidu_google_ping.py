@@ -13,7 +13,7 @@ from single_process import single_process
 def ping(ping_url, site_name, site_host, post_url, rss_url):
     rpc_server = xmlrpclib.ServerProxy(ping_url)
     result = rpc_server.weblogUpdates.extendedPing(
-        site_name, site_host, "http://"+post_url, "http://"+rss_url
+        site_name, site_host, f"http://{post_url}", f"http://{rss_url}"
     )
     print(result)
 
@@ -38,8 +38,7 @@ def main():
         for item in client.listen():
             print(item)
             if item['type'] == 'message':
-                msg = item['data']
-                if msg:
+                if msg := item['data']:
                     ping_all( * tuple( json.loads(msg) ) )
 
 

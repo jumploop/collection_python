@@ -32,9 +32,7 @@ class SyncSpider(object):
 
 def main():
     st = time.time()
-    urls = []
-    for page in range(1, 1000):
-        urls.append('http://www.jb51.net/article/%s.htm' % page)
+    urls = [f'http://www.jb51.net/article/{page}.htm' for page in range(1, 1000)]
     s = MySpider(urls)
     s.run()
     print(time.time()-st)

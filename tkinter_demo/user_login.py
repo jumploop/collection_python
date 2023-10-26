@@ -58,15 +58,15 @@ def usr_login():
     # 如果用户名和密码与文件中的匹配成功，则会登录成功，并跳出弹窗how are you? 加上你的用户名。
     if usr_name in usrs_info:
         if usr_pwd == usrs_info[usr_name]:
-            tkinter.messagebox.showinfo(title='Welcome', message='How are you? ' + usr_name)
-        # 如果用户名匹配成功，而密码输入错误，则会弹出'Error, your password is wrong, try again.'
+            tkinter.messagebox.showinfo(
+                title='Welcome', message=f'How are you? {usr_name}'
+            )
         else:
             tkinter.messagebox.showerror(message='Error, your password is wrong, try again.')
-    else:  # 如果发现用户名不存在
-        is_sign_up = tkinter.messagebox.askyesno('Welcome！ ', 'You have not sign up yet. Sign up now?')
-        # 提示需不需要注册新用户
-        if is_sign_up:
-            usr_sign_up()
+    elif is_sign_up := tkinter.messagebox.askyesno(
+        'Welcome！ ', 'You have not sign up yet. Sign up now?'
+    ):
+        usr_sign_up()
 
 
 # 第9步，定义用户注册功能

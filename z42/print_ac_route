@@ -5,7 +5,7 @@ import zapp.ANGELCRUNCH.view._url
 from zapp.ANGELCRUNCH.view._route import ROUTE_LIST
 from zapp.ANGELCRUNCH.model.const import CID
 
-CID2NAME = dict((k, v) for v, k in CID.__dict__.iteritems() if v[0] != "_")
+CID2NAME = {k: v for v, k in CID.__dict__.iteritems() if v[0] != "_"}
 
 for route in reversed(ROUTE_LIST):
     if isinstance(route.host, (basestring, str)):

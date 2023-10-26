@@ -19,11 +19,13 @@ def visualize_results(func):
 
 @visualize_results
 def analyze_and_visualize(data):
-    # Your combined analysis and visualization code here
-    data_DataFrame = pd.DataFrame(
-        {"x1": np.random.rand(10), "x2": np.random.rand(10), "x3": np.random.rand(10)}
+    return pd.DataFrame(
+        {
+            "x1": np.random.rand(10),
+            "x2": np.random.rand(10),
+            "x3": np.random.rand(10),
+        }
     )
-    return data_DataFrame
 
 
 if __name__ == "__main__":

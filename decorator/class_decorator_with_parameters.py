@@ -12,9 +12,9 @@ class Decorator:
         def wrap(*args):
             print('执行wrap()')
             print('装饰器参数：', self.arg1, self.arg2)
-            print('执行' + f.__name__ + '()')
+            print(f'执行{f.__name__}()')
             f(*args)
-            print(f.__name__ + '()执行完毕')
+            print(f'{f.__name__}()执行完毕')
 
         return wrap
 

@@ -19,7 +19,7 @@ l.pack()
 
 # 第6步，定义选项触发函数功能
 def print_selection():
-    l.config(text='you have selected ' + var.get())
+    l.config(text=f'you have selected {var.get()}')
 
 
 # 第5步，创建三个radiobutton选项，其中variable=var, value='A'的意思就是，当我们鼠标选中了其中一个选项，把value的值A放到变量var中，然后赋值给variable

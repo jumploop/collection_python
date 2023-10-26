@@ -10,7 +10,7 @@ import schedule
 
 
 def greet(name):
-    print('Hello {}'.format(name))
+    print(f'Hello {name}')
 
 
 # .tag 打标签

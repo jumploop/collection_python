@@ -16,22 +16,18 @@ engine = create_engine('mysql+pymysql://root:xxxx@localhost/mysql?charset=utf8')
 
 
 def read_excel(file):
-    df_excel = pd.read_excel(file)
-    return df_excel
+    return pd.read_excel(file)
 
 
 def read_json(file):
     with open(file, 'r') as json_f:
-        df_json = pd.read_json(json_f)
-        return df_json
+        return pd.read_json(json_f)
 
 
 def read_sql(table):
-    sql_cmd = 'SELECT * FROM %s' % table
-    df_sql = pd.read_sql(sql_cmd, engine)
-    return df_sql
+    sql_cmd = f'SELECT * FROM {table}'
+    return pd.read_sql(sql_cmd, engine)
 
 
 def read_csv(file):
-    df_csv = pd.read_csv(file)
-    return df_csv
+    return pd.read_csv(file)

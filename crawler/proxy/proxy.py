@@ -181,10 +181,7 @@ def output_file():
     if output_type == '':
         return
     fnum = len(output_filename)
-    content = []
-    for i in range(fnum):
-        content.append([output_head_string])
-
+    content = [[output_head_string] for _ in range(fnum)]
     conn.execute("select * from `proxier` order by `active`,`type`,`speed` asc")
     rs = conn.fetchall()
 
@@ -202,14 +199,10 @@ def output_file():
             content[4].append(formatline(item))  # 透明代理
         elif active == 1 and type == -1:
             content[5].append(formatline(item))  # 未知类型的代理
-        else:
-            pass
-
     for i in range(fnum):
         content[i].append(output_foot_string)
-        f = open(output_filename[i] + "." + output_type, 'w')
-        f.write(string.join(content[i], ''))
-        f.close()
+        with open(f"{output_filename[i]}.{output_type}", 'w') as f:
+            f.write(string.join(content[i], ''))
 
 
 # 格式化输出每条记录
@@ -232,13 +225,9 @@ def formatitem(value, colnum):
     elif value is None:
         value = ''
 
-    if colnum == 5 or colnum == 6 or colnum == 7:  # time_xxxed
+    if colnum in [5, 6, 7]:  # time_xxxed
         value = string.atof(value)
-        if value < 1:
-            value = ''
-        else:
-            value = formattime(value)
-
+        value = '' if value < 1 else formattime(value)
     if value == '' and output_type == 'htm': value = '&#160;'
     return value
 
@@ -252,8 +241,8 @@ def check_one_proxy(ip, port):
     checkstr = target_string
     timeout = target_timeout
     ip = string.strip(ip)
-    proxy = ip + ':' + str(port)
-    proxies = {'http': 'http://' + proxy + '/'}
+    proxy = f'{ip}:{str(port)}'
+    proxies = {'http': f'http://{proxy}/'}
     opener = urllib.FancyURLopener(proxies)
     opener.addheaders = [
         ('User-agent', 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)')
@@ -261,9 +250,9 @@ def check_one_proxy(ip, port):
     t1 = time.time()
 
     if (url.find("?") == -1):
-        url = url + '?rnd=' + str(random.random())
+        url = f'{url}?rnd={random.random()}'
     else:
-        url = url + '&rnd=' + str(random.random())
+        url = f'{url}&rnd={random.random()}'
 
     try:
         f = opener.open(url)
@@ -271,13 +260,9 @@ def check_one_proxy(ip, port):
         pos = s.find(checkstr)
     except:
         pos = -1
-        pass
     t2 = time.time()
     timeused = t2 - t1
-    if (timeused < timeout and pos > 0):
-        active = 1
-    else:
-        active = 0
+    active = 1 if (timeused < timeout and pos > 0) else 0
     update_array.append([ip, port, active, timeused])
     print (len(update_array), ' of ', check_in_one_call, " ", ip, ':', port, '--', int(timeused))
 
@@ -291,9 +276,9 @@ def get_html(url=''):
     ]
     t = time.time()
     if (url.find("?") == -1):
-        url = url + '?rnd=' + str(random.random())
+        url = f'{url}?rnd={random.random()}'
     else:
-        url = url + '&rnd=' + str(random.random())
+        url = f'{url}&rnd={random.random()}'
     try:
         f = opener.open(url)
         return f.read()
@@ -310,10 +295,10 @@ def get_html(url=''):
 
 def build_list_urls_1(page=5):
     page = page + 1
-    ret = []
-    for i in range(1, page):
-        ret.append('http://proxy4free.com/page%(num)01d.html' % {'num': i})
-    return ret
+    return [
+        'http://proxy4free.com/page%(num)01d.html' % {'num': i}
+        for i in range(1, page)
+    ]
 
 
 def parse_page_1(html=''):
@@ -365,10 +350,7 @@ def parse_page_2(html=''):
         port = match[1]
         type = match[2]
         area = match[3]
-        if (type == 'Anonymous'):
-            type = 1
-        else:
-            type = 2
+        type = 1 if (type == 'Anonymous') else 2
         ret.append([ip, port, type, area])
         if indebug: print ('2', ip, port, type, area)
     return ret
@@ -383,10 +365,10 @@ def parse_page_2(html=''):
 
 def build_list_urls_3(page=15):
     page = page + 1
-    ret = []
-    for i in range(1, page):
-        ret.append('http://www.samair.ru/proxy/proxy-%(num)02d.htm' % {'num': i})
-    return ret
+    return [
+        'http://www.samair.ru/proxy/proxy-%(num)02d.htm' % {'num': i}
+        for i in range(1, page)
+    ]
 
 
 def parse_page_3(html=''):
@@ -403,7 +385,7 @@ def parse_page_3(html=''):
         <\/tr>''', html, re.VERBOSE)
     ret = []
     for match in matches:
-        ip = match[0] + "." + match[1] + match[2]
+        ip = f"{match[0]}.{match[1]}{match[2]}"
         port = match[3]
         type = match[4]
         area = match[5]
@@ -429,10 +411,10 @@ def parse_page_3(html=''):
 
 def build_list_urls_4(page=3):
     page = page + 1
-    ret = []
-    for i in range(1, page):
-        ret.append('http://www.pass-e.com/proxy/index.php?page=%(n)01d' % {'n': i})
-    return ret
+    return [
+        'http://www.pass-e.com/proxy/index.php?page=%(n)01d' % {'n': i}
+        for i in range(1, page)
+    ]
 
 
 def parse_page_4(html=''):
@@ -473,10 +455,10 @@ def parse_page_4(html=''):
 
 def build_list_urls_5(page=12):
     page = page + 1
-    ret = []
-    for i in range(1, page):
-        ret.append('http://www.ipfree.cn/index2.asp?page=%(num)01d' % {'num': i})
-    return ret
+    return [
+        'http://www.ipfree.cn/index2.asp?page=%(num)01d' % {'num': i}
+        for i in range(1, page)
+    ]
 
 
 def parse_page_5(html=''):
@@ -505,10 +487,10 @@ def parse_page_5(html=''):
 
 def build_list_urls_6(page=3):
     page = page + 1
-    ret = []
-    for i in range(1, page):
-        ret.append('http://www.cnproxy.com/proxy%(num)01d.html' % {'num': i})
-    return ret
+    return [
+        'http://www.cnproxy.com/proxy%(num)01d.html' % {'num': i}
+        for i in range(1, page)
+    ]
 
 
 def parse_page_6(html=''):
@@ -522,10 +504,10 @@ def parse_page_6(html=''):
         <td>([^<]+)</td>                #area
         </tr>''', html, re.VERBOSE)
     ret = []
+    type = -1  # 该网站未提供代理服务器类型
     for match in matches:
         ip = match[0]
         port = match[1]
-        type = -1  # 该网站未提供代理服务器类型
         area = match[2]
         if indebug: print ('6', ip, port, type, area)
         area = unicode(area, 'cp936')
@@ -592,10 +574,10 @@ def parse_page_8(html=''):
 
 def build_list_urls_9(page=6):
     page = page + 1
-    ret = []
-    for i in range(0, page):
-        ret.append('http://proxylist.sakura.ne.jp/index.htm?pages=%(n)01d' % {'n': i})
-    return ret
+    return [
+        'http://proxylist.sakura.ne.jp/index.htm?pages=%(n)01d' % {'n': i}
+        for i in range(0, page)
+    ]
 
 
 def parse_page_9(html=''):
@@ -613,10 +595,7 @@ def parse_page_9(html=''):
         port = match[1]
         type = match[3]
         area = match[2]
-        if (type == 'Anonymous'):
-            type = 1
-        else:
-            type = -1
+        type = 1 if (type == 'Anonymous') else -1
         ret.append([ip, port, type, area])
         if indebug: print ('9', ip, port, type, area)
     return ret
@@ -631,10 +610,10 @@ def parse_page_9(html=''):
 
 def build_list_urls_10(page=5):
     page = page + 1
-    ret = []
-    for i in range(1, page):
-        ret.append('http://www.publicproxyservers.com/page%(n)01d.html' % {'n': i})
-    return ret
+    return [
+        'http://www.publicproxyservers.com/page%(n)01d.html' % {'n': i}
+        for i in range(1, page)
+    ]
 
 
 def parse_page_10(html=''):
@@ -675,13 +654,17 @@ def parse_page_10(html=''):
 
 def build_list_urls_11(page=10):
     page = page + 1
-    ret = []
-    for i in range(1, page):
-        ret.append('http://www.my-proxy.com/list/proxy.php?list=%(n)01d' % {'n': i})
-
-    ret.append('http://www.my-proxy.com/list/proxy.php?list=s1')
-    ret.append('http://www.my-proxy.com/list/proxy.php?list=s2')
-    ret.append('http://www.my-proxy.com/list/proxy.php?list=s3')
+    ret = [
+        'http://www.my-proxy.com/list/proxy.php?list=%(n)01d' % {'n': i}
+        for i in range(1, page)
+    ]
+    ret.extend(
+        (
+            'http://www.my-proxy.com/list/proxy.php?list=s1',
+            'http://www.my-proxy.com/list/proxy.php?list=s2',
+            'http://www.my-proxy.com/list/proxy.php?list=s3',
+        )
+    )
     return ret
 
 
@@ -715,12 +698,12 @@ def parse_page_11(html=''):
 
 
 def build_list_urls_12(page=4):
-    ret = []
-    ret.append('http://www.cybersyndrome.net/plr4.html')
-    ret.append('http://www.cybersyndrome.net/pla4.html')
-    ret.append('http://www.cybersyndrome.net/pld4.html')
-    ret.append('http://www.cybersyndrome.net/pls4.html')
-    return ret
+    return [
+        'http://www.cybersyndrome.net/plr4.html',
+        'http://www.cybersyndrome.net/pla4.html',
+        'http://www.cybersyndrome.net/pld4.html',
+        'http://www.cybersyndrome.net/pls4.html',
+    ]
 
 
 def parse_page_12(html=''):
@@ -822,16 +805,16 @@ def check_proxy(index, checklist=[]):
 def patch_check_proxy(threadCount, action=''):
     global check_in_one_call, skip_check_in_hour, conn
     threads = []
-    if (action == 'checknew'):  # 检查所有新加入，并且从未被检查过的
-        orderby = ' `time_added` desc '
-        strwhere = ' `active` is null '
-    elif (action == 'checkok'):  # 再次检查 以前已经验证成功的 代理
-        orderby = ' `time_checked` asc '
-        strwhere = ' `active`=1 '
-    elif (action == 'checkfail'):  # 再次检查以前验证失败的代理
+    if action == 'checkfail':
         orderby = ' `time_checked` asc '
         strwhere = ' `active`=0 '
-    else:  # 检查所有的
+    elif action == 'checknew':
+        orderby = ' `time_added` desc '
+        strwhere = ' `active` is null '
+    elif action == 'checkok':
+        orderby = ' `time_checked` asc '
+        strwhere = ' `active`=1 '
+    else:
         orderby = ' `time_checked` asc '
         strwhere = ' 1=1 '
     sql = """
@@ -850,11 +833,7 @@ def patch_check_proxy(threadCount, action=''):
     check_in_one_call = len(rows)
 
     # 计算每个线程将要检查的代理个数
-    if len(rows) >= threadCount:
-        num_in_one_thread = len(rows) / threadCount
-    else:
-        num_in_one_thread = 1
-
+    num_in_one_thread = len(rows) / threadCount if len(rows) >= threadCount else 1
     threadCount = threadCount + 1
     print ("现在开始验证以下代理服务器.....")
     for index in range(1, threadCount):
@@ -874,9 +853,9 @@ def patch_check_proxy(threadCount, action=''):
 
 def get_proxy_one_website(index):
     global proxy_array
-    func = 'build_list_urls_' + str(index)
-    parse_func = eval('parse_page_' + str(index))
-    urls = eval(func + '()')
+    func = f'build_list_urls_{str(index)}'
+    parse_func = eval(f'parse_page_{str(index)}')
+    urls = eval(f'{func}()')
     for url in urls:
         html = get_html(url)
         print (url)
@@ -905,7 +884,7 @@ def get_all_proxies():
             """ % {'t': formattime(last_add), 'n': skip_get_in_hour})
         return
 
-    print ("现在开始从以下" + str(web_site_count) + "个网站抓取代理列表....")
+    print(f"现在开始从以下{str(web_site_count)}个网站抓取代理列表....")
     threads = []
     count = web_site_count + 1
     for index in range(1, count):

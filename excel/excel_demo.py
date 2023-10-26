@@ -35,7 +35,7 @@ def exceL(sheet):
             sheet[j].expand('table').api.HorizontalAlignment = xw.constants.HAlign.xlHAlignCenter
             # 设置文本水平对齐方式为居中
             sheet[j].expand('table').api.VerticalAlignment = xw.constants.VAlign.xlVAlignCenter
-        workbook.save(r'data\{}.xlsx'.format(i[0]))  # 以名字命名
+        workbook.save(f'data\{i[0]}.xlsx')
         workbook.close()
         app.quit()
 

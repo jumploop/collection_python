@@ -23,10 +23,9 @@ def fetch(query_str=''):
     query = {
         'q': query_str
     }
-    url = 'http://fanyi.youdao.com/openapi.do?keyfrom=11pegasus11&key=273646050&type=data&doctype=json&version=1.1&' + urlencode(query)
+    url = f'http://fanyi.youdao.com/openapi.do?keyfrom=11pegasus11&key=273646050&type=data&doctype=json&version=1.1&{urlencode(query)}'
     response = urlopen(url, timeout=3)
-    html = response.read().decode('utf-8')
-    return html
+    return response.read().decode('utf-8')
 
 
 def parse(html):

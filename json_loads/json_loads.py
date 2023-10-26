@@ -48,11 +48,7 @@ def _byteify(data, ignore_dicts=False):
 
     # python 3 compatible duck-typing
     # if this is a unicode string, return its string representation
-    if str(type(data)) == "<type 'unicode'>":
-        return data.encode('utf-8')
-
-    # if it's anything else, return it in its original form
-    return data
+    return data.encode('utf-8') if str(type(data)) == "<type 'unicode'>" else data
 
 
 if __name__ == '__main__':

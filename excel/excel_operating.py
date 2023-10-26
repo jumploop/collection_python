@@ -19,8 +19,7 @@ class ExcelOperate(object):
 
     # 获取某个单元格的值
     def get_cell_value(self, row, column):
-        cell_value = self.ws.cell(row=row, column=column).value
-        return cell_value
+        return self.ws.cell(row=row, column=column).value
 
     # 获取某列的所有值
     def get_col_value(self, column):

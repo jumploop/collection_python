@@ -12,8 +12,7 @@ def html2txt(html=u''):
 
 import html2text    # to markdown not plain text
 def html2makrdown(html=u''):
-    markdown = html2text.html2text(html)    # html must unicode
-    return markdown
+    return html2text.html2text(html)
 
 
 import re

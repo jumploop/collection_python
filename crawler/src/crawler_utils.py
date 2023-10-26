@@ -100,15 +100,14 @@ class CurlStrParser(object):
             elif arg.startswith('--data'):
                 data_str = string
 
-        if data_as_dict:
-            data_dict = {}
-            pair_list = unquote(data_str).split('&')
-            for pair in pair_list:
-                k, v = pair.split('=')
-                data_dict[k] = v
-            return url, headers_dict, data_dict
-        else:
+        if not data_as_dict:
             return url, headers_dict, data_str
+        data_dict = {}
+        pair_list = unquote(data_str).split('&')
+        for pair in pair_list:
+            k, v = pair.split('=')
+            data_dict[k] = v
+        return url, headers_dict, data_dict
 
     def get_url(self):
         return self.parse_curl_str()[0]
@@ -177,13 +176,14 @@ def retry_get_html(*args, **kwargs):
 
 
 def lazy_property(fn):
-    attr_name = '_lazy_' + fn.__name__
+    attr_name = f'_lazy_{fn.__name__}'
 
     @property
     def _lazy_property(self):
         if not hasattr(self, attr_name):
             setattr(self, attr_name, fn(self))
             return getattr(self, attr_name)
+
     return _lazy_property
 
 
@@ -215,7 +215,9 @@ def form_data_to_dict(s):
 
 def change_ip():
     """change_ip use tor as socks proxy, this command can change tor ip"""
-    os.system("""(echo authenticate '"%s"'; echo signal newnym; echo quit) | nc localhost 9051"""%CONFIG.CRAWLER.PROXIES_PASSWORD)
+    os.system(
+        f"""(echo authenticate '"{CONFIG.CRAWLER.PROXIES_PASSWORD}"'; echo signal newnym; echo quit) | nc localhost 9051"""
+    )
     print(my_ip())
 
 
@@ -251,11 +253,14 @@ def get_proxy_dict(ip, port, proxy_type='http' or 'socks5'):
     :param port: int port
     :param proxy_type: 'http' or 'socks5'
     """
-    proxies = {
-        'http': '{proxy_type}://{ip}:{port}'.format(proxy_type=proxy_type, ip=ip, port=port),
-        'https': '{proxy_type}://{ip}:{port}'.format(proxy_type=proxy_type, ip=ip, port=port),
+    return {
+        'http': '{proxy_type}://{ip}:{port}'.format(
+            proxy_type=proxy_type, ip=ip, port=port
+        ),
+        'https': '{proxy_type}://{ip}:{port}'.format(
+            proxy_type=proxy_type, ip=ip, port=port
+        ),
     }
-    return proxies
 
 
 def random_ip():

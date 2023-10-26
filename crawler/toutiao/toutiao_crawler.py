@@ -27,8 +27,7 @@ def gid():
 
 
 def get_article(html):
-    article = extract('<div class="article-content">', '</div>', html)
-    return article
+    return extract('<div class="article-content">', '</div>', html)
 
 
 def get_logo_url(html):
@@ -61,8 +60,7 @@ class ToutiaoSpider(object):
             media_name = each.get('media_name')
             if not media_name:
                 continue
-            site = {}
-            site['name'] = each.get('media_name')
+            site = {'name': each.get('media_name')}
             site['id'] = each.get('media_url')
             site['gid'] = 1  # gid()
             site['url'] = urlparse(each.get('url')).netloc
@@ -71,9 +69,7 @@ class ToutiaoSpider(object):
             site['logo'] = get_logo_url(html)
             res_site.append(site)
 
-            post = {}
-            for k in post_to_get_field:
-                post[k] = each.get(k)
+            post = {k: each.get(k) for k in post_to_get_field}
             post['html'] = get_article(html)
             post['source_gid'] = site['gid']
             res_post.append(post)

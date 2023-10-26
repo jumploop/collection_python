@@ -61,11 +61,14 @@ def get_proxy_dict(ip, port, proxy_type='http' or 'socks5'):
     :param port: int port
     :param proxy_type: 'http' or 'socks5'
     """
-    proxies = {
-        'http': '{proxy_type}://{ip}:{port}'.format(proxy_type=proxy_type, ip=ip, port=port),
-        'https': '{proxy_type}://{ip}:{port}'.format(proxy_type=proxy_type, ip=ip, port=port),
+    return {
+        'http': '{proxy_type}://{ip}:{port}'.format(
+            proxy_type=proxy_type, ip=ip, port=port
+        ),
+        'https': '{proxy_type}://{ip}:{port}'.format(
+            proxy_type=proxy_type, ip=ip, port=port
+        ),
     }
-    return proxies
 
 
 def requests_proxy(ip, port):

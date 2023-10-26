@@ -51,7 +51,7 @@ def monitor(directory, callback):
 
 
 chrome_port = 9222
-chrome_json_url = 'http://localhost:%s/json' % (chrome_port)
+chrome_json_url = f'http://localhost:{chrome_port}/json'
 refresh_json = json.dumps({
     "id": 0,
     "method": "Page.reload",

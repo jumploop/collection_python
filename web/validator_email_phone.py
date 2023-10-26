@@ -19,9 +19,7 @@ class Validator(object):
 
     @staticmethod
     def validate_email(email):
-        if len(email) >= 6 and (Validator.EMAIL_PAT.match(email) is not None):
-            return True
-        return False
+        return len(email) >= 6 and Validator.EMAIL_PAT.match(email) is not None
 
     @staticmethod
     def validate_email_list(email_list):
@@ -29,10 +27,7 @@ class Validator(object):
         """
         if not isinstance(email_list, list):
             email_list = [email_list]
-        for email in email_list:
-            if not Validator.validate_email(email):
-                return False
-        return True
+        return all(Validator.validate_email(email) for email in email_list)
 
     @staticmethod
     def validate_phone(phone_number):
@@ -53,10 +48,7 @@ class Validator(object):
     def validate_phone_list(phone_number_list):
         if not isinstance(phone_number_list, list):
             phone_number_list = [phone_number_list]
-        for phone in phone_number_list:
-            if not Validator.validate_phone(phone):
-                return False
-        return True
+        return all(Validator.validate_phone(phone) for phone in phone_number_list)
 
     @staticmethod
     def validate(data_list, data_type):

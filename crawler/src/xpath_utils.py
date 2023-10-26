@@ -61,19 +61,18 @@ class XpathCrawler(object):
 
     def get_field(self, field):
         """定义默认xpath解析方法，如果自定义方法，用get_作为开头覆盖默认get_field"""
-        func_name = 'get_' + field
+        func_name = f'get_{field}'
         xpath_str = self.xpath_dict.get(field)
         if hasattr(self, func_name):
             return getattr(self, func_name)(xpath_str)
-        else:
-            self.logger.debug(field, self.url)
-            return self.parser.xpath(xpath_str)[0].strip() if xpath_str else ''
+        self.logger.debug(field, self.url)
+        return self.parser.xpath(xpath_str)[0].strip() if xpath_str else ''
 
     def get_result(self):
-        xpath_result = {}
-        for field, xpath_string in self.xpath_dict.items():
-            xpath_result[field] = makes(self.get_field(field))    # to utf8
-        return xpath_result
+        return {
+            field: makes(self.get_field(field))
+            for field, xpath_string in self.xpath_dict.items()
+        }
 
     def get_link(self, xpath_str=None):
         return self.url
@@ -90,9 +89,7 @@ class FantasyhairbuySite(Site):
         parser = etree.HTML(html)
         category_xpath_str = '//*[@id="nav"]/div/div/ul//a/@href'
         category_hrefs = parser.xpath(category_xpath_str)
-        category_urls = []
-        for href in category_hrefs:
-            category_urls.append(urljoin(self.domain, href))
+        category_urls = [urljoin(self.domain, href) for href in category_hrefs]
         for url in category_urls:
             parser = etree.HTML(retry_get_html(url))
             try:

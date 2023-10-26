@@ -18,7 +18,7 @@ l.pack()
 
 # 第6步，定义一个触发函数功能
 def print_selection(v):
-    l.config(text='you have selected ' + v)
+    l.config(text=f'you have selected {v}')
 
 
 # 第5步，创建一个尺度滑条，长度200字符，从0开始10结束，以2为刻度，精度为0.01，触发调用print_selection函数

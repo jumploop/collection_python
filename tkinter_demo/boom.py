@@ -32,7 +32,7 @@ def boom():
 
 if __name__ == '__main__':
     threads = []
-    for i in range(5):
+    for _ in range(5):
         t = threading.Thread(target=boom)
         threads.append(t)
         t.start()
